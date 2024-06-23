@@ -1,17 +1,20 @@
 # About
 
-[![Lint](https://github.com/rgl/terraform-aws-rds-postgres-example/actions/workflows/lint.yml/badge.svg)](https://github.com/rgl/terraform-aws-rds-postgres-example/actions/workflows/lint.yml)
+[![Lint](https://github.com/rgl/terraform-aws-rds-aurora-postgres-example/actions/workflows/lint.yml/badge.svg)](https://github.com/rgl/terraform-aws-rds-aurora-postgres-example/actions/workflows/lint.yml)
 
-An example Amazon RDS for PostgreSQL database that can be used from an AWS EC2 Ubuntu Virtual Machine.
+An example [Amazon RDS Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/) database that can be used from an AWS EC2 Ubuntu Virtual Machine.
+
+**NB** For an [Amazon RDS for PostgreSQL](https://aws.amazon.com/rds/postgresql/) example see the [rgl/terraform-aws-rds-postgres-example repository](https://github.com/rgl/terraform-aws-rds-postgres-example).
 
 This will:
 
-* Use the [Amazon RDS for PostgreSQL service](https://aws.amazon.com/rds/postgresql/).
+* Use the [Amazon RDS Aurora PostgreSQL service](https://aws.amazon.com/rds/aurora/).
+  * Create a Database Cluster.
   * Create a Database Instance.
 * Create an example Ubuntu Virtual Machine.
   * Can be used to access the Database Instance.
 * Create a VPC and all the required plumbing required for the Ubuntu Virtual
-  Machine to use an Amazon RDS PostgreSQL Database Instance.
+  Machine to use an Amazon RDS Aurora PostgreSQL Database Instance.
 
 # Usage (on a Ubuntu Desktop)
 
@@ -94,7 +97,7 @@ journalctl -u app
 exit
 ```
 
-Try accessing the PostgreSQL Database Instance, from within the AWS VPC, using [`psql`](https://www.postgresql.org/docs/current/app-psql.html):
+Try accessing the Aurora PostgreSQL Database Instance, from within the AWS VPC, using [`psql`](https://www.postgresql.org/docs/current/app-psql.html):
 
 ```bash
 ssh "ubuntu@$(terraform output --raw app_ip_address)" \
@@ -122,7 +125,7 @@ select case when ssl then concat('YES (', version, ')') else 'NO' end as ssl fro
 EOF
 ```
 
-Open an interactive psql session, show the PostgreSQL version, and exit:
+Open an interactive psql session, show the Aurora PostgreSQL version, and exit:
 
 ```bash
 ssh -t "ubuntu@$(terraform output --raw app_ip_address)" \
@@ -135,6 +138,13 @@ ssh -t "ubuntu@$(terraform output --raw app_ip_address)" \
   psql
 select version();
 exit
+```
+
+When required, re-create the app EC2 instance:
+
+```bash
+make terraform-destroy-app
+make terraform-apply
 ```
 
 Destroy the example:
@@ -159,11 +169,9 @@ GITHUB_COM_TOKEN='YOUR_GITHUB_PERSONAL_TOKEN' ./renovate.sh
 * [Connect to the internet using an internet gateway](https://docs.aws.amazon.com/vpc/latest/userguide/VPC_Internet_Gateway.html#vpc-igw-internet-access)
 * [Retrieve instance metadata](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instancedata-data-retrieval.html)
 * [How Instance Metadata Service Version 2 works](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-metadata-v2-how-it-works.html)
-* [Amazon RDS for PostgreSQL service](https://aws.amazon.com/rds/postgresql/)
-* [Amazon RDS for PostgreSQL resources](https://aws.amazon.com/rds/postgresql/resources/)
-* [Amazon RDS for PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/CHAP_PostgreSQL.html)
-* [Common DBA tasks for Amazon RDS for PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/Appendix.PostgreSQL.CommonDBATasks.html)
-* [Using SSL with a PostgreSQL DB instance](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html)
-* [Using SSL/TLS to encrypt a connection to a DB instance or cluster](https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/UsingWithRDS.SSL.html)
+* [Amazon RDS Aurora PostgreSQL service](https://aws.amazon.com/rds/aurora/)
+* [Amazon RDS Aurora PostgreSQL resources](https://aws.amazon.com/rds/aurora/resources/)
+* [Amazon RDS Aurora PostgreSQL User Guide](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/CHAP_AuroraOverview.html)
+* [Security with Amazon Aurora PostgreSQL](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.Security.html)
 * [PostgreSQL Environment Variables](https://www.postgresql.org/docs/16/libpq-envars.html)
 * [PostgreSQL System Information Functions and Operators](https://www.postgresql.org/docs/16/functions-info.html)

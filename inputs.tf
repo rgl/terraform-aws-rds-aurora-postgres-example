@@ -11,7 +11,7 @@ variable "owner" {
 
 variable "name_prefix" {
   type    = string
-  default = "rgl-terraform-aws-rds-postgres-example"
+  default = "rgl-terraform-aws-rds-aurora-postgres-example"
 }
 
 # NB when you run make terraform-apply this is set from the TF_VAR_admin_ssh_key_data environment variable, which comes from the ~/.ssh/id_rsa.pub file.
