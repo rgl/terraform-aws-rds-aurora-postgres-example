@@ -3,6 +3,6 @@ terraform.tfstate*
 .vagrant/
 shared/
 tmp/
-secrets.*
+secrets*
 *.tmp.png
 *.log
