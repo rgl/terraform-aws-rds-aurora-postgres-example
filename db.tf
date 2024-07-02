@@ -34,6 +34,7 @@ resource "random_password" "example_db_admin_password" {
 resource "aws_rds_cluster" "example" {
   cluster_identifier     = var.name_prefix
   engine                 = "aurora-postgresql"
+  engine_mode            = "provisioned"
   engine_version         = "16.2"
   master_username        = "postgres" # NB cannot be admin.
   master_password        = random_password.example_db_admin_password.result
@@ -42,6 +43,10 @@ resource "aws_rds_cluster" "example" {
   availability_zones     = [local.vpc_az_a]
   skip_final_snapshot    = true
   apply_immediately      = true
+  serverlessv2_scaling_configuration {
+    min_capacity = 0.5
+    max_capacity = 1.0
+  }
   tags = {
     Name = var.name_prefix
   }
@@ -59,7 +64,7 @@ resource "aws_rds_cluster_instance" "example" {
   count              = 1
   cluster_identifier = aws_rds_cluster.example.id
   identifier         = "${var.name_prefix}-${count.index}"
-  instance_class     = "db.t3.medium"
+  instance_class     = "db.serverless"
   engine             = aws_rds_cluster.example.engine
   engine_version     = aws_rds_cluster.example.engine_version
   apply_immediately  = aws_rds_cluster.example.apply_immediately
